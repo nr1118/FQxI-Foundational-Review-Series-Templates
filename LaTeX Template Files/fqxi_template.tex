@@ -1,0 +1,67 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+% Load one of the two bibliography style package with the 'author-year' or the 'sequential-numbered' option
+% Load one of the two geometry style packages with the 'manuscript' (pre-accetance) or the 'publication' (post-acceptance) option
+\usepackage[manuscript,author-year]{fqxi_foundational_review}
+\setcitestyle{aysep={}}
+
+\newcommand{\fqxi}{FQ$_x$I}
+
+\title{FQ$_x$I Template for submissions to the Foundational Review Series}
+
+\author[1,\orcidlink{0000-0002-9626-7257}]{Nathan Rutherford \email{nathan.rutherford@fqxi.org}}
+\author[1,2, \orcidlink{0000-0003-0695-8220}]{Fabio Anza \email{fabio.anza@fqxi.org}}
+
+
+\affil[1]{Foundational Questions Institute}
+\affil[2]{University of Maryland, Baltimore County}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% TODO: Find a way to create a table of contents. 
+\begin{Abstract}
+This is where the abstract goes    
+\end{Abstract}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}\label{sec:intro}
+The citation commands are \cite{Rutherford24} or \citep[][]{Rutherford24}. You can also add text before and after a citation if you wish \citep[see][for further details]{Rutherford24}.
+
+
+
+Here we have two equations
+
+\begin{equation}\label{eq:1}
+    R_{\mu \nu} - \frac{1}{2}g_{\mu \nu} R = \frac{8 \pi G}{c^4} T_{\mu \nu}.
+\end{equation}
+
+\begin{equation}\label{eq:2}
+    E = mc^2
+\end{equation}
+
+\section{This is another section}
+
+\subsection{a sub-section}
+In Sec.~\ref{sec:intro} we introduced the topic. In Eq.~(\ref{eq:1}) and (\ref{eq:2}), we show Einstein's field equations and rest mass-energy equivalence relation, respectively.
+
+\bottomline{Give a brief 1-3 sentence summary of what a reader should be taking away from this section. }
+
+\section*{Acknowledgments}
+Give thanks to anyone involved in helping with the manuscript, \fqxi, and any other funding sources. 
+\appendix
+
+\section{Appendix A}
+
+\setfqxibib
+\bibliography{biblio.bib}
+\end{document}

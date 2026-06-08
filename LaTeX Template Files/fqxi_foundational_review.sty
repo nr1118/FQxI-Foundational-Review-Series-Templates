@@ -1,0 +1,254 @@
+\usepackage[T1]{fontenc}
+\usepackage{CormorantGaramond}
+\RequirePackage{geometry}
+\RequirePackage{environ}
+\RequirePackage{lineno}
+\RequirePackage{setspace}
+\RequirePackage{graphicx}
+\RequirePackage{titling}
+\RequirePackage{authblk}
+\RequirePackage{amsmath,amssymb,amsfonts}
+\RequirePackage[cmintegrals,cmbraces]{newtxmath} % Math structure and spacing
+\usepackage{appendix}
+%\RequirePackage{ebgaramond-maths}  % Matching serif math symbols
+
+
+
+\RequirePackage{microtype} % Fixes general spacing issues document-wide
+\RequirePackage{xurl}      % Allows URLs and DOIs to break anywhere
+\RequirePackage{xcolor}   % needed for \definecolor
+\RequirePackage{etoolbox}
+\RequirePackage{tocloft} % Load tocloft if not already loaded
+
+
+
+\definecolor{fqxicolor}{HTML}{bf9000}
+\definecolor{toccolor}{HTML}{000000}
+%e4d344
+%bf9000
+\RequirePackage[
+    bookmarks=true,
+    pdfnewwindow=true,
+    colorlinks=true,
+    linkcolor=fqxicolor,
+    citecolor=fqxicolor,
+    filecolor=fqxicolor,
+    urlcolor=fqxicolor,
+    final=true
+]{hyperref}
+\usepackage{orcidlink}
+\newcommand{\email}[1]{\thanks{\href{mailto:#1}{#1}}}
+
+\newcommand{\bottomline}[1]{\textbf{\underline{Bottom Line}:} #1}
+\linenumbers
+
+%Formatting the Table of Contents (TOC)
+\AtBeginDocument{%
+    % Rename contents to TOC
+    \renewcommand{\contentsname}{Table of Contents}
+
+    % Center the TOC title
+    \renewcommand{\cfttoctitlefont}{\hfill\Large\bfseries}
+    \renewcommand{\cftaftertoctitle}{\hfill}
+
+    % Entry font styling, each defined only once with hypersetup included
+    \renewcommand{\cftsecfont}{\hypersetup{linkcolor=toccolor}\bfseries}
+    \renewcommand{\cftsubsecfont}{\hypersetup{linkcolor=toccolor}\itshape}
+    \renewcommand{\cftsubsubsecfont}{\hypersetup{linkcolor=toccolor}\small}
+}
+
+
+%set up package that will allow user to manually choose between an author-year or sequential-numbered 
+
+\newbool{fqxi@numeric}
+\booltrue{fqxi@numeric} % Default to numeric
+
+\DeclareOption{publication}{
+    \geometry{
+        letterpaper,
+        top=0.85in,
+        bottom=0.85in,
+        left=0.75in,
+        right=0.75in,
+        columnsep=0.25in
+    }
+}
+
+\DeclareOption{manuscript}{
+    \geometry{
+        letterpaper,
+        margin=1.25in,
+        footskip=0.5in
+    }
+}
+
+\DeclareOption{author-year}{\boolfalse{fqxi@numeric}}
+\DeclareOption{sequential-numbered}{\booltrue{fqxi@numeric}}
+
+
+\ExecuteOptions{manuscript,sequential-numbered}
+\ProcessOptions\relax
+
+
+\ifbool{fqxi@numeric}{
+    % Settings for Numbered Style
+    \RequirePackage[numbers,square,comma,sort&compress]{natbib}
+    \newcommand{\setfqxibib}{
+        \bibliographystyle{fqxi_numbered}
+    }
+}{
+    % Settings for Author-Year Style
+    \RequirePackage[comma,authoryear]{natbib}
+    \newcommand{\setfqxibib}{
+        \bibliographystyle{fqxi_author_year}
+    }
+}
+
+\RequirePackage{fancyhdr}
+\fancypagestyle{plain}{ % We redefine 'plain' because classes like REVTeX/AAS force it
+    \fancyhf{}
+    \fancyhead[L]{\small\raisebox{-0.5\height}{\includegraphics[height=3em]{FQxI_Logo.png}}}
+    \fancyhead[R]{\small\href{https://fqxi.org/}{the landing page of the paper}}
+    \fancyfoot[C]{\large\thepage} % Cormorant Garamond looks better at \large
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% obviously the page style
+\pagestyle{plain}
+
+%The global style for ALL OTHER pages
+\fancypagestyle{fancy}{
+    \fancyhf{}
+    \fancyhead[L]{\small\textit{FQ$_x$I Foundational Review Series}}
+    % \fancyhead[L]{\small\raisebox{-0.5\height}{\includegraphics[height=3em]{FQxI_Logo.png}}}
+    \fancyhead[R]{\small\textit{Last name of author(s) et al. Year}} % Your running author header
+    \fancyfoot[C]{\large\thepage}
+    \renewcommand{\headrulewidth}{0pt} 
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% Apply the 'fancy' style globally
+\pagestyle{fancy}
+
+\pagenumbering{arabic}
+
+
+
+% TITLE AND AUTHOR FORMATTING
+\setlength{\droptitle}{-4em}
+
+\pretitle{\begin{center}\bfseries\Large}
+\posttitle{\end{center}\vskip 1em}
+% \pretitle{\begin{center}\bfseries\Large}
+% \posttitle{\par\vskip 0.5em \large\textit{Foundational Review Series}\end{center}\vskip 1em}
+
+
+\renewcommand\Authfont{\normalfont}
+
+\renewcommand\Affilfont{\normalfont\itshape\small}
+\renewcommand\Authands{, and }      
+
+
+\predate{\begin{center}\small}
+\postdate{\end{center}\vskip 1em}
+
+
+%Abstract Environment creation
+
+\newenvironment{Abstract}{
+    \vspace*{-4\baselineskip} 
+    \small
+    \begin{center}
+        \bfseries Abstract
+    \end{center}
+    \list{}{
+        \leftmargin=1.5cm   % Indent the whole block from the left
+        \rightmargin=1.5cm  % Indent the whole block from the right
+        \listparindent=1.5em % Indent the 1st line of the block
+        \parsep=0pt         % Space between internal paragraphs
+    }
+    \item\relax
+    \hspace{\listparindent} % Forces the very first line to indent
+}{
+    \endlist
+}
+
+\RequirePackage{titlesec}
+
+% Center the section titles
+\titleformat{\section}
+  {\Large\bfseries\centering} % Format: Font style, size, bold, and centered
+  {\arabic{section}.}                          % Label: The section number (e.g., 1, 2)
+  {1em}                                  % Separation: Space between number and title
+  {}                                     % Code before the title
+
+% Optional: Center subsections as well
+\titleformat{\subsection}
+  {\normalfont\large\itshape\centering}
+  {\thesubsection}
+  {1em}
+  {}
+
+
+% Optional: Center subsubsections as well
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\upshape\centering}
+  {\thesubsubsection}
+  {1em}
+  {}
+
+\g@addto@macro{\appendix}{%
+  \titleformat{\section}
+    {\Large\bfseries\centering}
+    {\Alph{section}.}
+    {1em}
+    {}%
+}
+% Custom Single Column bibliography formatting
+
+
+\makeatletter
+\renewcommand{\bibsection}{}
+\makeatother
+
+
+\renewcommand{\refname}{}
+\renewcommand{\bibname}{}
+
+\let\oldbibliography\bibliography
+
+\renewcommand{\bibliography}[1]{%
+  \clearpage
+  \onecolumn
+  
+
+  \begin{center}
+    \Large References
+  \end{center}
+  \vspace{1em}
+  
+
+  \renewcommand{\refname}{}% For 'article' class
+  \renewcommand{\bibname}{}% For 'book' or 'report' class
+  
+  \small 
+  \begin{spacing}{0.9}
+
+  \raggedright 
+    
+
+    \let\oldthebibliography\thebibliography
+    \renewcommand{\thebibliography}[1]{%
+      \oldthebibliography{##1}% 
+      \setlength{\itemsep}{2pt}%
+      \setlength{\parskip}{0pt}
+    }%
+    \oldbibliography{#1}%
+    
+  \end{spacing}%
+
+  \clearpage
+}
+
+\endinput
