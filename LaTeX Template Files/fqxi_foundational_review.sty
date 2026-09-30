@@ -7,7 +7,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{titling}
 \RequirePackage{authblk}
-\RequirePackage{amsmath,amssymb,amsfonts}
+\RequirePackage{amsmath,amssymb,amsfonts,amsthm}
 \RequirePackage[cmintegrals,cmbraces]{newtxmath} % Math structure and spacing
 \usepackage{appendix}
 %\RequirePackage{ebgaramond-maths}  % Matching serif math symbols
@@ -20,7 +20,17 @@
 \RequirePackage{etoolbox}
 \RequirePackage{tocloft} % Load tocloft if not already loaded
 
+\RequirePackage[normalem]{ulem}   % normalem preserves \emph as italic
+\RequirePackage{xparse}
 
+% Colors are separated out so you can retheme without touching \edit itself
+\providecolor{editdel}{named}{red}
+\definecolor{editins}{rgb}{0,0.2,0.6}
+
+\NewDocumentCommand{\edit}{m o}{%
+  \textcolor{red}{\sout{#1}}%
+  \IfValueT{#2}{\,\textcolor{blue!70!black}{\uline{#2}}}%
+}
 
 \definecolor{fqxicolor}{HTML}{bf9000}
 \definecolor{toccolor}{HTML}{000000}
@@ -40,7 +50,7 @@
 \newcommand{\email}[1]{\thanks{\href{mailto:#1}{#1}}}
 
 \newcommand{\bottomline}[1]{\textbf{\underline{Bottom Line}:} #1}
-\linenumbers
+
 
 %Formatting the Table of Contents (TOC)
 \AtBeginDocument{%
@@ -59,22 +69,24 @@
 
 
 %set up package that will allow user to manually choose between an author-year or sequential-numbered 
+%Define the line numbering boolean switch
+\newif\if@showlinenumbers
+\@showlinenumbersfalse
 
 \newbool{fqxi@numeric}
 \booltrue{fqxi@numeric} % Default to numeric
 
 \DeclareOption{publication}{
+    \@showlinenumbersfalse
     \geometry{
         letterpaper,
-        top=0.85in,
-        bottom=0.85in,
-        left=0.75in,
-        right=0.75in,
-        columnsep=0.25in
+        margin=1.25in,
+        footskip=0.5in
     }
 }
 
 \DeclareOption{manuscript}{
+    \@showlinenumberstrue 
     \geometry{
         letterpaper,
         margin=1.25in,
@@ -89,6 +101,11 @@
 \ExecuteOptions{manuscript,sequential-numbered}
 \ProcessOptions\relax
 
+
+\if@showlinenumbers
+  \RequirePackage{lineno}
+  \linenumbers
+\fi
 
 \ifbool{fqxi@numeric}{
     % Settings for Numbered Style
@@ -105,10 +122,11 @@
 }
 
 \RequirePackage{fancyhdr}
+\setlength{\headheight}{32.85pt}  % Prevents fancyhdr headheight warnings across varying header content
 \fancypagestyle{plain}{ % We redefine 'plain' because classes like REVTeX/AAS force it
     \fancyhf{}
     \fancyhead[L]{\small\raisebox{-0.5\height}{\includegraphics[height=3em]{FQxI_Logo.png}}}
-    \fancyhead[R]{\small\href{https://fqxi.org/}{the landing page of the paper}}
+   \fancyhead[R]{\small\href{https://fqxi.org/}{the landing page of the paper (for now just FQxI's main page)}}
     \fancyfoot[C]{\large\thepage} % Cormorant Garamond looks better at \large
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
@@ -122,7 +140,7 @@
     \fancyhf{}
     \fancyhead[L]{\small\textit{FQ$_x$I Foundational Review Series}}
     % \fancyhead[L]{\small\raisebox{-0.5\height}{\includegraphics[height=3em]{FQxI_Logo.png}}}
-    \fancyhead[R]{\small\textit{Last name of author(s) et al. Year}} % Your running author header
+    \fancyhead[R]{\small\textit{Author Year}} % Your running author header
     \fancyfoot[C]{\large\thepage}
     \renewcommand{\headrulewidth}{0pt} 
     \renewcommand{\footrulewidth}{0pt}
@@ -157,7 +175,7 @@
 %Abstract Environment creation
 
 \newenvironment{Abstract}{
-    \vspace*{-4\baselineskip} 
+    \vspace*{-3\baselineskip} 
     \small
     \begin{center}
         \bfseries Abstract
@@ -219,8 +237,8 @@
 \let\oldbibliography\bibliography
 
 \renewcommand{\bibliography}[1]{%
-  \clearpage
-  \onecolumn
+  %\clearpage
+  %^\onecolumn
   
 
   \begin{center}
@@ -248,7 +266,7 @@
     
   \end{spacing}%
 
-  \clearpage
+  %\clearpage
 }
 
 \endinput

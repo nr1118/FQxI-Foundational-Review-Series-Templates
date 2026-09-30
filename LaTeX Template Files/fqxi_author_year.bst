@@ -43,6 +43,7 @@ ENTRY
     editor
     howpublished
     institution
+    isbn
     journal
     key
     month
@@ -250,6 +251,14 @@ FUNCTION {quote}
   if$
 }
 
+FUNCTION {format.isbn}
+{ isbn empty$
+    { "" }
+    { "ISBN~" isbn * }
+  if$
+}
+
+
 %% ---------------------------------------------------------------
 %% Name formatting
 %%
@@ -260,8 +269,8 @@ FUNCTION {quote}
 INTEGERS { nameptr namesleft numnames }
 
 %% format.names.chicago builds the full author string.
-%% nameptr=1  → "{ll}{, f.}"   → "Rutherford, N."
-%% nameptr>1  → "{f. }{ll}"    → "N. Rutherford"
+%% nameptr=1  → "{vv~}{ll}{, f.}"   → "Rutherford, N." vv stands for von part of a name
+%% nameptr>1  → "{f. }{vv~}{ll}"    → "N. Rutherford"
 
 FUNCTION {format.names.chicago}
 { 's :=
@@ -270,8 +279,8 @@ FUNCTION {format.names.chicago}
   numnames 'namesleft :=
     { namesleft #0 > }
     { nameptr #1 =
-        { s nameptr "{ll}{, f.}" format.name$ 't := }
-        { s nameptr "{f.~}{ll}" format.name$ 't := }
+        { s nameptr "{vv~}{ll}{, f.}" format.name$ 't := }
+        { s nameptr "{f.~}{vv~}{ll}" format.name$ 't := }
       if$
       numnames #6 > nameptr #4 = and
         { "others" 't := }
@@ -837,6 +846,8 @@ FUNCTION {book}
   new.sentence
   address output
   publisher "publisher" output.check
+  new.block
+  format.isbn output
   new.block
   format.pid output
   new.block

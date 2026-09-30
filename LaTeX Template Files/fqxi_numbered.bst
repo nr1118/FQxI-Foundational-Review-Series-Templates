@@ -49,6 +49,7 @@ ENTRY
     editor
     howpublished
     institution
+    isbn
     journal
     key
     month
@@ -227,6 +228,13 @@ FUNCTION {quote}
   if$
 }
 
+FUNCTION {format.isbn}
+{ isbn empty$
+    { "" }
+    { "ISBN~" isbn * }
+  if$
+}
+
 %% ---------------------------------------------------------------
 %% Name formatting
 %% ---------------------------------------------------------------
@@ -240,8 +248,8 @@ FUNCTION {format.names.chicago}
   numnames 'namesleft :=
     { namesleft #0 > }
     { nameptr #1 =
-        { s nameptr "{ll}{, f.}" format.name$ 't := }
-        { s nameptr "{f.~}{ll}" format.name$ 't := }
+        { s nameptr "{vv~}{ll}{, f.}" format.name$ 't := }
+        { s nameptr "{f.~}{vv~}{ll}" format.name$ 't := }
       if$
       numnames #6 > nameptr #4 = and
         { "others" 't := }
@@ -544,7 +552,11 @@ FUNCTION {book}
     { format.editors "author and editor" output.check }
     { format.authors output.nonnull
       crossref missing$
-        { "author and editor" editor either.or.check }
+        { editor empty$
+            'skip$
+            { format.editors output }
+          if$
+        }
         'skip$
       if$
     }
@@ -556,6 +568,8 @@ FUNCTION {book}
   address output
   publisher "publisher" output.check
   format.date "year" output.check
+  new.block
+  format.isbn output
   new.block
   format.pid output
   new.block
@@ -586,7 +600,11 @@ FUNCTION {inbook}
     { format.editors "author and editor" output.check }
     { format.authors output.nonnull
       crossref missing$
-        { "author and editor" editor either.or.check }
+        { editor empty$
+            'skip$
+            { format.editors output }
+          if$
+        }
         'skip$
       if$
     }
@@ -609,7 +627,6 @@ FUNCTION {inbook}
   note output
   fin.entry
 }
-
 %% INCOLLECTION
 %% Surname, F. "Title." In BookTitle, edited by F. Ed, Pages. Place: Publisher, Year.
 FUNCTION {incollection}
